@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tawlid Market - Commandes via WhatsApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #25D366;
+            --primary-dark: #128C7E;
+            --secondary: #075E54;
+            --light: #f5f5f5;
+            --dark: #333;
+            --gray: #666;
+            --white: #fff;
+            --shadow: 0 5px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+            --danger: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary-dark));
+            color: var(--white);
+            padding: 20px 0;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .tagline {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        .login-btn {
+            background-color: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .login-btn:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+        
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.2);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background-color: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            text-align: center;
+            padding: 80px 20px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .cta-btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            border: 2px solid var(--primary);
+        }
+        
+        .cta-btn:hover {
+            background-color: transparent;
+            color: var(--white);
+        }
+        
+        /* Products Section */
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .product-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 2;
+        }
+        
+        .product-image-container {
+            height: 350px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .product-info {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .old-price {
+            text-decoration: line-through;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .product-description {
+            color: var(--gray);
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+        
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .product-rating {
+            color: #FFD700;
+        }
+        
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: var(--transition);
+            width: 100%;
+            text-align: center;
+        }
+        
+        .whatsapp-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Tawlid Section */
+        .tawlid-section {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            display: none;
+        }
+        
+        .tawlid-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .tawlid-btn {
+            grid-column: span 2;
+            background-color: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .tawlid-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Admin Controls */
+        .admin-controls {
+            display: none;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .admin-btn {
+            background-color: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            margin: 0 10px;
+        }
+        
+        .admin-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .delete-btn {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .feature-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .feature-text {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background-color: var(--primary);
+            bottom: 0;
+            left: 0;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            color: var(--white);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero {
+                padding: 60px 20px;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .tawlid-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .tawlid-btn {
+                grid-column: span 1;
+            }
+            
+            .product-image-container {
+                height: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .products {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title h2 {
+                font-size: 1.5rem;
+            }
+            
+            .product-image-container {
+                height: 280px;
+            }
+        }
+        
+        /* Alertes et indicateurs */
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-info {
+            background-color: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+            font-size: 1.2rem;
+            color: var(--gray);
+        }
+        
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Instructions pour l'admin */
+        .instructions {
+            background-color: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .instructions a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .instructions a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-store"></i>
+                <div>
+                    <h1>Tawlid Market</h1>
+                    <p class="tagline">Votre marketplace 100% WhatsApp</p>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#products">Produits</a>
+                <a href="#features">Avantages</a>
+                <a href="#contact">Contact</a>
+                <a href="#" class="login-btn" id="loginBtn">
+                    <i class="fas fa-user"></i> Connexion
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Modal de connexion -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h3 class="modal-title">Connexion Administrateur</h3>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" id="username" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" class="form-control" required>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <main class="container">
+        <section class="hero">
+            <h2>Découvrez nos produits exceptionnels</h2>
+            <p>Commandez en un clic via WhatsApp et recevez vos produits directement chez vous</p>
+            <a href="#products" class="cta-btn">Voir les produits <i class="fas fa-arrow-down"></i></a>
+        </section>
+        
+        <!-- Contrôles admin (cachés par défaut) -->
+        <div class="admin-controls" id="adminControls">
+            <button class="admin-btn" id="showProductForm">
+                <i class="fas fa-plus"></i> Ajouter un produit
+            </button>
+            <button class="admin-btn" id="exportJsonBtn">
+                <i class="fas fa-file-export"></i> Exporter JSON
+            </button>
+            <button class="admin-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button>
+            <div id="productCounter" class="alert alert-info"></div>
+        </div>
+        
+        <!-- Instructions pour l'admin -->
+        <div class="instructions" id="adminInstructions" style="display: none;">
+            <h3>Instructions pour l'Administrateur</h3>
+            <ol>
+                <li>Ajoutez vos produits via le formulaire ci-dessous</li>
+                <li>Cliquez sur "Exporter JSON" pour télécharger le fichier produits.json</li>
+                <li>Hébergez ce fichier sur GitHub ou un autre service d'hébergement</li>
+                <li>Mettez à jour l'URL dans le fichier JavaScript (ligne 1220)</li>
+                <li>Tous les visiteurs verront les produits mis à jour</li>
+            </ol>
+            <p>Exemple d'URL GitHub : <code>https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/produits.json</code></p>
+        </div>
+        
+        <!-- Section de création de produit (cachée par défaut) -->
+        <section id="tawlid" class="tawlid-section">
+            <div class="section-title">
+                <h2>Créer un Produit (Tawlid)</h2>
+            </div>
+            <form id="productForm" class="tawlid-form">
+                <div class="form-group">
+                    <label for="productName">Nom du Produit</label>
+                    <input type="text" id="productName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Prix (€)</label>
+                    <input type="number" id="productPrice" class="form-control" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="productOldPrice">Ancien Prix (€)</label>
+                    <input type="number" id="productOldPrice" class="form-control" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Catégorie</label>
+                    <select id="productCategory" class="form-control">
+                        <option value="electronics">Électronique</option>
+                        <option value="fashion">Mode</option>
+                        <option value="home">Maison</option>
+                        <option value="beauty">Beauté</option>
+                        <option value="other">Autre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="productImageUrl">URL de l'image du produit</label>
+                    <input type="url" id="productImageUrl" class="form-control" placeholder="https://example.com/image.jpg" required>
+                </div>
+                <div class="form-group">
+                    <label for="productRating">Note (0-5)</label>
+                    <input type="number" id="productRating" class="form-control" min="0" max="5" step="0.1" value="4.5">
+                </div>
+                <button type="submit" class="tawlid-btn">
+                    <i class="fas fa-plus-circle"></i> Ajouter le Produit
+                </button>
+            </form>
+        </section>
+        
+        <section id="products">
+            <div class="section-title">
+                <h2>Nos Produits Populaires</h2>
+            </div>
+            <div class="products" id="productsContainer">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Chargement des produits...</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="features">
+            <div class="section-title">
+                <h2>Pourquoi Choisir Tawlid Market?</h2>
+            </div>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title">Commandes Rapides</h3>
+                    <p class="feature-text">Passez commande en quelques secondes via WhatsApp sans processus compliqué.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Paiement Sécurisé</h3>
+                    <p class="feature-text">Transactions sécurisées avec protection de vos données personnelles.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 class="feature-title">Livraison Express</h3>
+                    <p class="feature-text">Recevez vos produits en 24-48h avec notre réseau de livraison partenaire.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="feature-title">Support 24/7</h3>
+                    <p class="feature-text">Notre équipe est disponible via WhatsApp pour répondre à toutes vos questions.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Tawlid Market</h3>
+                    <p>La marketplace innovante qui simplifie vos achats via WhatsApp. Qualité, rapidité et sécurité.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Liens Rapides</h3>
+                    <ul class="footer-links">
+                        <li><a href="#products">Produits</a></li>
+                        <li><a href="#features">Avantages</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Catégories</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Électronique</a></li>
+                        <li><a href="#">Mode</a></li>
+                        <li><a href="#">Maison</a></li>
+                        <li><a href="#">Beauté</a></li>
+                        <li><a href="#">Autre</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contactez-nous</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone"></i> +212 6 12 34 56 78</li>
+                        <li><i class="fas fa-envelope"></i> contact@tawlidmarket.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Casablanca, Maroc</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 Tawlid Market. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Identifiants admin
+        const ADMIN_CREDENTIALS = {
+            username: "admin",
+            password: "admin123"
+        };
+        
+        // Clé pour le localStorage
+        const STORAGE_KEY = 'tawlid_market_products';
+        const MAX_PRODUCTS = 300;
+        
+        // URL du fichier JSON (à remplacer par votre URL GitHub)
+        // Exemple : "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/produits.json"
+        const PRODUCTS_JSON_URL = "https://raw.githubusercontent.com/example-user/tawlid-market/main/products.json";
+        
+        // État de connexion
+        let isAdminLoggedIn = false;
+        
+        // Éléments du DOM
+        const loginBtn = document.getElementById('loginBtn');
+        const loginModal = document.getElementById('loginModal');
+        const closeModal = document.getElementById('closeModal');
+        const loginForm = document.getElementById('loginForm');
+        const adminControls = document.getElementById('adminControls');
+        const showProductFormBtn = document.getElementById('showProductForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const tawlidSection = document.getElementById('tawlid');
+        const productsContainer = document.getElementById('productsContainer');
+        const productCounter = document.getElementById('productCounter');
+        const exportJsonBtn = document.getElementById('exportJsonBtn');
+        const adminInstructions = document.getElementById('adminInstructions');
+        
+        // Charger les produits depuis le JSON distant au démarrage
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProductsFromRemote();
+        });
+        
+        // Fonction pour charger les produits depuis l'URL distante
+        function loadProductsFromRemote() {
+            fetch(PRODUCTS_JSON_URL)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur de réseau');
+                    }
+                    return response.json();
+                })
+                .then(products => {
+                    renderProducts(products);
+                })
+                .catch(error => {
+                    console.error('Erreur de chargement des produits:', error);
+                    productsContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Impossible de charger les produits. Veuillez réessayer plus tard.
+                        </div>
+                    `;
+                });
+        }
+        
+        // Fonction pour obtenir les produits depuis le localStorage
+        function getProductsFromStorage() {
+            const productsJson = localStorage.getItem(STORAGE_KEY);
+            return productsJson ? JSON.parse(productsJson) : [];
+        }
+        
+        // Fonction pour sauvegarder les produits dans le localStorage
+        function saveProductsToStorage(products) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+            updateProductCounter();
+        }
+        
+        // Fonction pour mettre à jour le compteur de produits
+        function updateProductCounter() {
+            const products = getProductsFromStorage();
+            productCounter.textContent = `Produits enregistrés: ${products.length}/${MAX_PRODUCTS}`;
+        }
+        
+        // Fonction pour générer un ID unique
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+        
+        // Fonction pour afficher les produits
+        function renderProducts(products) {
+            if (products.length === 0) {
+                productsContainer.innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        Aucun produit disponible pour le moment.
+                    </div>
+                `;
+                return;
+            }
+            
+            productsContainer.innerHTML = '';
+            
+            products.forEach(product => {
+                const productHTML = `
+                    <div class="product-card" data-id="${product.id}">
+                        ${product.oldPrice ? '<span class="product-badge">Promo</span>' : '<span class="product-badge">Nouveau</span>'}
+                        <div class="product-image-container">
+                            <img src="${product.imageSrc}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/300x300?text=Image+non+disponible'">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">${product.name}</h3>
+                            <div class="product-meta">
+                                <span class="product-category">${getCategoryName(product.category)}</span>
+                                <span class="product-rating">
+                                    <i class="fas fa-star"></i> ${product.rating}
+                                </span>
+                            </div>
+                            <p class="product-price">
+                                ${product.price} €
+                                ${product.oldPrice ? `<span class="old-price">${product.oldPrice} €</span>` : ''}
+                            </p>
+                            <p class="product-description">${product.description}</p>
+                            <a href="#" class="whatsapp-btn" onclick="orderViaWhatsApp('${product.name}', ${product.price})">
+                                <i class="fab fa-whatsapp"></i> Commander
+                            </a>
+                            ${isAdminLoggedIn ? `<button class="delete-btn" onclick="deleteProduct('${product.id}')">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                productsContainer.insertAdjacentHTML('beforeend', productHTML);
+            });
+        }
+        
+        // Fonction pour passer commande via WhatsApp
+        function orderViaWhatsApp(productName, productPrice) {
+            const whatsappNumber = "212612345678";
+            const message = `Bonjour, je souhaite commander le produit suivant:
+            
+Produit: ${productName}
+Prix: ${productPrice} €
+
+Mes informations:
+Nom: [Votre nom]
+Adresse: [Votre adresse]
+Téléphone: [Votre numéro]
+
+Merci !`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
+        }
+        
+        // Fonction utilitaire pour obtenir le nom de la catégorie
+        function getCategoryName(categoryId) {
+            const categories = {
+                'electronics': 'Électronique',
+                'fashion': 'Mode',
+                'home': 'Maison',
+                'beauty': 'Beauté',
+                'other': 'Autre'
+            };
+            return categories[categoryId] || 'Autre';
+        }
+        
+        // Fonction pour supprimer un produit
+        function deleteProduct(productId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+                const products = getProductsFromStorage();
+                const updatedProducts = products.filter(product => product.id !== productId);
+                saveProductsToStorage(updatedProducts);
+                renderProducts(updatedProducts);
+            }
+        }
+        
+        // Fonction pour exporter les produits au format JSON
+        function exportProducts() {
+            const products = getProductsFromStorage();
+            if (products.length === 0) {
+                alert('Aucun produit à exporter.');
+                return;
+            }
+            
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(products, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "produits.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            
+            alert('Fichier produits.json téléchargé. Vous pouvez maintenant l\'héberger sur GitHub.');
+        }
+        
+        // Gestion de la création de produits
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Récupérer les valeurs du formulaire
+            const name = document.getElementById('productName').value;
+            const price = parseFloat(document.getElementById('productPrice').value).toFixed(2);
+            const oldPrice = document.getElementById('productOldPrice').value ? 
+                parseFloat(document.getElementById('productOldPrice').value).toFixed(2) : '';
+            const category = document.getElementById('productCategory').value;
+            const description = document.getElementById('productDescription').value;
+            const imageUrl = document.getElementById('productImageUrl').value;
+            const rating = parseFloat(document.getElementById('productRating').value).toFixed(1);
+            
+            // Vérifier la limite de produits
+            const products = getProductsFromStorage();
+            if (products.length >= MAX_PRODUCTS) {
+                alert(`Vous avez atteint la limite maximale de ${MAX_PRODUCTS} produits.`);
+                return;
+            }
+            
+            // Créer un nouvel objet produit
+            const newProduct = {
+                id: generateId(),
+                name,
+                price,
+                oldPrice,
+                category,
+                description,
+                imageSrc: imageUrl,
+                rating,
+                isDefault: false
+            };
+            
+            // Ajouter le produit au stockage local
+            products.push(newProduct);
+            saveProductsToStorage(products);
+            renderProducts(products);
+            
+            // Réinitialiser le formulaire
+            this.reset();
+            
+            // Afficher un message de succès
+            alert('Produit ajouté avec succès! N\'oubliez pas d\'exporter le JSON pour le mettre à jour sur GitHub.');
+        });
+        
+        // Gestion de la connexion admin
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+        
+        closeModal.addEventListener('click', function() {
+            loginModal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', function(e) {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+        
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                isAdminLoggedIn = true;
+                loginModal.style.display = 'none';
+                adminControls.style.display = 'block';
+                adminInstructions.style.display = 'block';
+                loginBtn.style.display = 'none';
+                
+                // Charger les produits du localStorage pour l'admin
+                const products = getProductsFromStorage();
+                renderProducts(products);
+                updateProductCounter();
+                
+                alert('Connexion réussie! Vous pouvez maintenant gérer les produits.');
+            } else {
+                alert('Identifiants incorrects. Veuillez réessayer.');
+            }
+        });
+        
+        // Gestion des contrôles admin
+        showProductFormBtn.addEventListener('click', function() {
+            tawlidSection.style.display = 'block';
+            window.scrollTo({
+                top: tawlidSection.offsetTop - 20,
+                behavior: 'smooth'
+            });
+        });
+        
+        exportJsonBtn.addEventListener('click', exportProducts);
+        
+        logoutBtn.addEventListener('click', function() {
+            isAdminLoggedIn = false;
+            adminControls.style.display = 'none';
+            adminInstructions.style.display = 'none';
+            tawlidSection.style.display = 'none';
+            loginBtn.style.display = 'flex';
+            
+            // Recharger les produits distants
+            loadProductsFromRemote();
+            
+            alert('Vous avez été déconnecté.');
+        });
+    </script>
+</body>
+</html>
